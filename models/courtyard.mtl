@@ -1,0 +1,93 @@
+# Blender 5.1.0 MTL File: 'yard.blend'
+# www.blender.org
+
+newmtl arc
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures/sponza_arch_diff.tga
+map_Disp textures/sponza_arch_ddn.tga
+
+newmtl bricks
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures/spnza_bricks_a_diff.tga
+map_Disp textures/spnza_bricks_a_ddn.tga
+
+newmtl ceiling
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures/sponza_ceiling_a_diff.tga
+map_Disp textures/sponza_ceiling_a_ddn.tga
+
+newmtl column_a
+Ns 7.843135
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd textures/sponza_column_a_diff.tga
+map_Disp textures/sponza_column_a_ddn.tga
+
+newmtl column_c
+Ns 7.843135
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd textures/sponza_column_c_diff.tga
+map_Disp textures/sponza_column_c_ddn.tga
+
+newmtl floor
+Ns 30.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/sponza_floor_a_diff.tga
+map_Disp textures/sponza_floor_a_ddn.tga
+
+newmtl roof
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/sponza_roof_diff.tga
+map_Disp textures/sponza_roof_ddn.tga
+
+newmtl vase
+Ns 7.843135
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd textures/vase_dif.tga
+map_Disp textures/vase_ddn.tga
