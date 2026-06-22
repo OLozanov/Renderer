@@ -4,7 +4,7 @@
 #include <immintrin.h>
 
 void ShadowVertexShader(const SceneData* data, const SimpleVertex* in, float* out) noexcept;
-void DepthVertexShader(const SceneData* data, const SimpleVertex* in, float* out) noexcept;
+void DepthVertexShader(const SceneData* data, const OutVertex* in, float* out) noexcept;
 
 void vectorcall ShadowPixelShader(const SceneData* data,
                                  uint32_t pid, uint32_t tx, uint32_t ty,

@@ -12,6 +12,7 @@
 #include "Shaders/Normal.h"
 #include "Shaders/Lighting.h"
 #include "Shaders/Effects.h"
+#include "Shaders/Transform.h"
 
 #include <filesystem>
 
@@ -124,6 +125,13 @@ void App::setupLight(const glm::vec3& lightDir)
 
     m_sceneData.lights = m_lights.data();
     m_ltgridData.lights = m_lights.data();
+
+    // Write transform command list
+    m_transformCommandList.begin();
+    m_transformCommandList.bindComputeShader(reinterpret_cast<Render::ComputeShaderPtr>(VertexTransformShader));
+    m_transformCommandList.bindConstantBuffer((uint8_t*)&m_scene.transformData());
+    m_transformCommandList.dispatch();
+    m_transformCommandList.finish();
 }
 
 void App::resize(uint32_t width, uint32_t height)
@@ -235,6 +243,8 @@ void App::updateView()
     m_effectsData.z = { -hsin, hcos };
     m_effectsData.fire = m_fire[uint32_t(m_animTime)];
 
+    m_scene.transformData().projView = m_sceneData.projView;
+
     m_frustum.update(m_sceneData.projView);
 
     if (m_renderMode == RenderMode::Lighting)
@@ -300,17 +310,15 @@ void App::display()
     m_mainCommandList.bindIndexBuffer(m_scene.indexBuffer());
     m_mainCommandList.setPolygonMode(m_renderMode == RenderMode::Wireframe ? Render::PolygonMode::Line : Render::PolygonMode::Fill);
 
-    // Depth prepass
     if (m_renderMode == RenderMode::Lighting)
     {
+        // Depth prepass
         m_mainCommandList.bindConstantBuffer((uint8_t*)&m_sceneData);
         m_mainCommandList.bindShader(m_depthPrepassShader);
         m_mainCommandList.execute(m_sceneCommandList);
         m_mainCommandList.setDepthFunc(Render::Pipeline::LessOrEqual);
-    }
 
-    if (m_renderMode == RenderMode::Lighting)
-    {
+        // 
         m_mainCommandList.bindConstantBuffer((uint8_t*)&m_ltgridData);
         m_mainCommandList.bindComputeShader(reinterpret_cast<Render::ComputeShaderPtr>(LightGridFillShader));
         m_mainCommandList.dispatch(m_ltgridx, m_ltgridy);
@@ -382,6 +390,8 @@ void App::display()
     }
 
     m_mainCommandList.finish();
+
+    m_pipeline.execute(m_transformCommandList);
     m_pipeline.execute(m_mainCommandList);
 
     SDL_UnlockTexture(m_frameBuffer);

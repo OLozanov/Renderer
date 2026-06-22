@@ -70,6 +70,7 @@ private:
 
     Render::CommandList m_mainCommandList;
     Render::CommandList m_sceneCommandList;
+    Render::CommandList m_transformCommandList;
 
     SkyBox m_skyBox;
     Mesh<SimpleVertex> m_flameMesh;

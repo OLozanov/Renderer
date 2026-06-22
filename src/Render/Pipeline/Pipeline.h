@@ -183,6 +183,7 @@ private:
                       size_t attribnum) noexcept;
 
     void dispatch(size_t n, uint32_t x, uint32_t y);
+    void dispatch(size_t n, uint32_t num);
 
     void executeLocal(const Command* commands, size_t n, bool reset = true);
 

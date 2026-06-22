@@ -922,6 +922,16 @@ void Pipeline::dispatch(size_t n, uint32_t x, uint32_t y)
         }
 }
 
+void Pipeline::dispatch(size_t n, uint32_t num)
+{
+    uint32_t count = num / ThreadNum;
+
+    uint32_t min = n * count;
+    uint32_t max = min + count - 1;
+
+    for (uint32_t i = min; i <= max; i++) m_tileState[n].computeShader(m_tileState[n].shaderData, i, 0);
+}
+
 void Pipeline::bitblt_rgb8(Image* image, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     int32_t x1 = std::max(x, 0);
@@ -1036,7 +1046,12 @@ void Pipeline::executeLocal(const Command* commands, size_t n, bool reset)
             case Command::ClearDepth: clearDepth(n, cmd.floatparam); break;
             case Command::Draw: draw(n, cmd.num, cmd.offset); break;
             case Command::DrawIndexed: drawIndexed(n, cmd.num, cmd.offset, cmd.voffset); break;
-            case Command::Dispatch: dispatch(n, cmd.param1, cmd.param2); break;
+            case Command::Dispatch: 
+                if (cmd.param2 != 0)
+                    dispatch(n, cmd.param1, cmd.param2);
+                else
+                    dispatch(n, cmd.param1 == 0 ? ThreadNum : cmd.param1);
+            break;
             default: break;
         }
     }
@@ -1050,6 +1065,21 @@ void Pipeline::execute(const CommandList& commandList)
     for (size_t cmdptr = 0; ;cmdptr++)
     {
         const Command& cmd = m_commands[cmdptr];
+
+        if (cmd.type == Command::SetComputeShader)
+        {
+            for (size_t n = 0; n < ThreadNum; n++)
+            {
+                m_tileState[n].computeShader = reinterpret_cast<ComputeShaderPtr>(cmd.address);
+                m_tileState[n].cmdptr = cmdptr;
+            }
+
+            m_executeBarrier.arrive_and_wait();
+            executeLocal(m_commands, 0);
+            m_finishBarrier.arrive_and_wait();
+
+            return;
+        }
         
         if (cmd.type == Command::SetFrameBuffer)
         {

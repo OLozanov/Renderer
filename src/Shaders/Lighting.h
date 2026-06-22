@@ -6,14 +6,14 @@
 struct InParams
 {
     glm::vec2 tcoord;
-    glm::vec3 pos;
     glm::vec3 normal;
     glm::vec3 tangent;
     glm::vec3 binormal;
+    glm::vec3 pos;
 };
 
 void LightGridFillShader(const LightGridData* data, uint32_t x, uint32_t y) noexcept;
-void LightingVertexShader(const SceneData* data, const Vertex* in, float* out) noexcept;
+void LightingVertexShader(const SceneData* data, const float* in, float* out) noexcept;
 void vectorcall LightingPixelShader(const SceneData* data,
                                     uint32_t pid, uint32_t tx, uint32_t ty,
                                     const InParams* attrib_a, const InParams* attrib_b, const InParams* attrib_c,

@@ -232,32 +232,16 @@ void LightGridFillShader(const LightGridData* data, uint32_t x, uint32_t y) noex
     data->ltgrid[offset] = lnum;
 }
 
-void LightingVertexShader(const SceneData* data, const Vertex* in, float* out) noexcept
+void LightingVertexShader(const SceneData* data, const float* in, float* out) noexcept
 {
-    __m128 x = _mm_set_ps1(in->position.x);
-    __m128 y = _mm_set_ps1(in->position.y);
-    __m128 z = _mm_set_ps1(in->position.z);
+    __m256 dat1 = _mm256_load_ps(in);
+    __m256 dat2 = _mm256_load_ps(in + 8);
 
-    __m128 pos = _mm_load_ps(&data->projView[3][0]);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[0][0]), x, pos);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[1][0]), y, pos);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[2][0]), z, pos);
+    _mm256_store_ps(out, dat1);
+    _mm256_store_ps(out + 8, dat2);
 
-    _mm_store_ps(out, pos);
-
-    glm::vec2* attrib = reinterpret_cast<glm::vec2*>(out + 4);
-    out[4] = in->uv.x;
-    out[5] = in->uv.y;
-
-    glm::vec3* realpos = reinterpret_cast<glm::vec3*>(out + 6);
-    glm::vec3* normal = reinterpret_cast<glm::vec3*>(out + 9);
-    glm::vec3* tangent = reinterpret_cast<glm::vec3*>(out + 12);
-    glm::vec3* binormal = reinterpret_cast<glm::vec3*>(out + 15);
-
-    *realpos = in->position;
-    *normal = in->normal;
-    *tangent = in->tangent;
-    *binormal = in->binormal;
+    out[16] = in[16];
+    out[17] = in[17];
 }
 
 void vectorcall LightingPixelShader(const SceneData* data,

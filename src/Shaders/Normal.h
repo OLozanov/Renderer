@@ -11,7 +11,7 @@ struct NormInParams
     glm::vec3 binormal;
 };
 
-void NormalVertexShader(const SceneData* data, const Vertex* in, float* out) noexcept;
+void NormalVertexShader(const SceneData* data, const float* in, float* out) noexcept;
 void vectorcall NormalPixelShader(const SceneData* data,
                                   uint32_t pid, uint32_t tx, uint32_t ty,
                                   const NormInParams* attrib_a, const NormInParams* attrib_b, const NormInParams* attrib_c,

@@ -131,7 +131,7 @@ public:
     void draw(uint32_t num, uint32_t offset = 0);
     void drawIndexed(uint32_t num, uint32_t offset = 0, uint32_t vertexOffset = 0);
 
-    void dispatch(uint32_t x, uint32_t y);
+    void dispatch(uint32_t x = 0, uint32_t y = 0);
 
     void execute(const CommandList& commandList);
 

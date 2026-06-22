@@ -13,6 +13,17 @@ struct SceneNode
     uint32_t num;
 };
 
+struct SceneTransformData
+{
+    glm::mat4 projView;
+
+    uint32_t num;
+    uint32_t batch;
+
+    const Vertex* in;
+    OutVertex* out;
+};
+
 class Scene
 {
 public:
@@ -33,8 +44,12 @@ public:
 
     const std::vector<SceneNode>& nodes() const { return m_nodes; }
 
+    SceneTransformData& transformData() { return m_transformData; }
+    const SceneTransformData& transformData() const { return m_transformData; }
+
 private:
     std::vector<Vertex> m_vertices;
+    std::vector<OutVertex> m_outVertices;
     std::vector<Render::IndexType> m_indices;
     std::vector<uint32_t> m_faceData;
 
@@ -43,4 +58,6 @@ private:
 
     Render::VertexBufferView m_vertexBuffer;
     Render::IndexBufferView m_indexBuffer;
+
+    SceneTransformData m_transformData;
 };

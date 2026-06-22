@@ -19,17 +19,9 @@ void ShadowVertexShader(const SceneData* data, const SimpleVertex* in, float* ou
     out[5] = in->uv.y;
 }
 
-void DepthVertexShader(const SceneData* data, const SimpleVertex* in, float* out) noexcept
+void DepthVertexShader(const SceneData* data, const OutVertex* in, float* out) noexcept
 {
-    __m128 x = _mm_set_ps1(in->position.x);
-    __m128 y = _mm_set_ps1(in->position.y);
-    __m128 z = _mm_set_ps1(in->position.z);
-
-    __m128 pos = _mm_load_ps(&data->projView[3][0]);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[0][0]), x, pos);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[1][0]), y, pos);
-    pos = _mm_fmadd_ps(_mm_load_ps(&data->projView[2][0]), z, pos);
-
+    __m128 pos = _mm_load_ps((float*)&in->position);
     _mm_store_ps(out, pos);
 
     glm::vec2* attrib = reinterpret_cast<glm::vec2*>(out + 4);

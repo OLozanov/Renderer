@@ -3,7 +3,7 @@
 #include "Shaders/ShaderData.h"
 #include <immintrin.h>
 
-void SimpleVertexShader(const SceneData* data, const SimpleVertex* in, float* out) noexcept;
+void SimpleVertexShader(const SceneData* data, const OutVertex* in, float* out) noexcept;
 void vectorcall SimplePixelShader(const SceneData* data,
                                   uint32_t pid, uint32_t tx, uint32_t ty,
                                   const glm::vec2* attrib_a, const glm::vec2* attrib_b, const glm::vec2* attrib_c,

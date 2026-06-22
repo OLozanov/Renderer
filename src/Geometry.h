@@ -22,6 +22,18 @@ struct Vertex
     glm::vec3 binormal;
 };
 
+struct OutVertex
+{
+    glm::vec4 position;
+    glm::vec2 uv;
+
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 binormal;
+
+    glm::vec3 realpos;
+};
+
 struct Material
 {
     Render::Image* diffuseMap = nullptr;
