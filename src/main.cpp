@@ -31,9 +31,6 @@ int main(int argc, char* args[])
 
 	SDL_SetWindowRelativeMouseMode(window, true);
 
-	//int w, h;
-	//SDL_GetRenderOutputSize(renderer, &w, &h);
-
 	SDL_Texture* frameBuffer = SDL_CreateTexture(renderer,
 												 SDL_PIXELFORMAT_RGBA8888,
 												 SDL_TEXTUREACCESS_STREAMING,
@@ -41,7 +38,9 @@ int main(int argc, char* args[])
 												 height);
 	bool run = true;
 
-	App app(frameBuffer);
+	std::string scene = argc > 1 ? args[1] : "courtyard";
+
+	App app(frameBuffer, scene);
 	app.resize(width, height);
 
 	float t = 1.0f;

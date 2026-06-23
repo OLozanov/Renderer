@@ -5,9 +5,9 @@
 #include "Shaders/Common.h"
 #include "Render/Pipeline/Sampling.h"
 
-void ShadowVertexShader(const SceneData* data, const SimpleVertex* in, float* out) noexcept
+void ShadowVertexShader(const SceneData* data, const OutVertex* in, float* out) noexcept
 {
-    glm::vec4 pos = data->shadowMat * glm::vec4(in->position, 1.0f);
+    glm::vec4 pos = data->shadowMat * in->position;
 
     out[0] = pos.x;
     out[1] = pos.y;

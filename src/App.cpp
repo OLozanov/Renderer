@@ -14,9 +14,11 @@
 #include "Shaders/Effects.h"
 #include "Shaders/Transform.h"
 
+#include <iostream>
+#include <fstream>
 #include <filesystem>
 
-App::App(SDL_Texture* frameBuffer)
+App::App(SDL_Texture* frameBuffer, const std::string& sceneName)
 : m_frameBuffer(frameBuffer)
 , m_depthBuffer(Render::PixelFormat::F32, frameBuffer->w, frameBuffer->h)
 , m_shadow(Render::PixelFormat::F32, 1024, 1024)
@@ -49,8 +51,11 @@ App::App(SDL_Texture* frameBuffer)
 , m_speed(10.0f)
 , m_animTime(0.0f)
 {
-    LoadObj("models/courtyard.obj", m_scene);
-    //LoadObj("models/sponza.obj", m_scene, 0.01f);
+    glm::vec3 lightdir = { 0.3f, 1.0f, 0.3f };
+    float scale = 1.0f;
+
+    loadScene("models/" + sceneName + ".scene", lightdir, scale);
+    LoadObj("models/" + sceneName + ".obj", m_scene, scale);
 
     m_sceneData.materials = m_scene.materials().data();
     m_sceneData.faceData = m_scene.faces();
@@ -58,8 +63,109 @@ App::App(SDL_Texture* frameBuffer)
     for (size_t i = 0; i < 6; i++) m_skyData.faces[i] = m_skyBox.face(i);
 
     setupEffects();
-    setupLight(glm::vec3(0.3f, 1.0f, 0.3f));
+    setupLight(lightdir);
     drawShadow();
+
+    // Write transform command list
+    m_transformCommandList.begin();
+    m_transformCommandList.bindComputeShader(reinterpret_cast<Render::ComputeShaderPtr>(VertexTransformShader));
+    m_transformCommandList.bindConstantBuffer((uint8_t*)&m_scene.transformData());
+    m_transformCommandList.dispatch();
+    m_transformCommandList.finish();
+}
+
+void App::loadScene(const std::string& fname, glm::vec3& lightdir, float& scale)
+{
+    std::ifstream file(fname);
+
+    if (!file.is_open())
+    {
+        std::cout << "Can't open file " << fname << std::endl;
+        return;
+    }
+
+    size_t flameId = -1;
+    size_t lightId = -1;
+
+    while (!file.eof())
+    {
+        std::string str;
+        file >> str;
+
+        if (str[0] == '#')
+        {
+            file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        if (str == "scale")
+        {
+            file >> scale;
+        }
+
+        if (str == "dirlight")
+        {
+            file >> lightdir.x;
+            file >> lightdir.y;
+            file >> lightdir.z;
+        }
+
+        if (str == "light")
+        {
+            flameId = -1;
+            lightId = m_lights.size();
+            m_lights.push_back({});
+        }
+
+        if (str == "flame")
+        {
+            lightId = -1;
+            flameId = m_flameData.size();
+            m_flameData.push_back({ &m_effectsData, {}, {} });
+        }
+
+        if (str == "pos")
+        {
+            float x, y, z;
+            
+            file >> x;
+            file >> y;
+            file >> z;
+
+            if (lightId != -1) m_lights[lightId].pos = { x, y, z };
+            if (flameId != -1) m_flameData[flameId].pos = { x, y, z };
+        }
+
+        if (str == "color")
+        {
+            float r, g, b;
+
+            file >> r;
+            file >> g;
+            file >> b;
+
+            if (lightId != -1) m_lights[lightId].color = { r, g, b };
+            if (flameId != -1) m_flameData[flameId].color = { r, g, b };
+        }
+
+        if (str == "radius")
+        {
+            float val;
+            file >> val;
+
+            if (lightId != -1) m_lights[lightId].radius = val;
+        }
+
+        if (str == "falloff")
+        {
+            float val;
+            file >> val;
+
+            if (lightId != -1) m_lights[lightId].falloff = val;
+        }
+    }
+
+    file.close();
 }
 
 void App::setupEffects()
@@ -84,12 +190,6 @@ void App::setupEffects()
     }
 
     m_animFrames = m_fire.size() - 1;
-
-    m_flameData = { {&m_effectsData, {6.0f, 2.0f, 6.0f}, {1.0f, 1.0f, 1.0f} },
-                    {&m_effectsData, {-6.0f, 2.0f, 6.0f}, {1.0f, 0.0f, 1.0f} },
-                    {&m_effectsData, {6.0f, 2.0f, -6.0f}, {0.0f, 1.0f, 0.0f} },
-                    {&m_effectsData, {-6.0f, 2.0f, -6.0f}, {0.0f, 0.3f, 1.0f} } 
-                  };
 }
 
 void App::setupLight(const glm::vec3& lightDir)
@@ -118,20 +218,8 @@ void App::setupLight(const glm::vec3& lightDir)
     m_sceneData.shadowMat = glm::mat4(orthoMat) * lightMat;
     m_sceneData.shadow = m_shadow;
 
-    m_lights = { {{6.0f, 2.0f, 6.0f}, 2.5f, 1.0f, {1.0f, 0.8f, 0.5f}},
-                 {{-6.0f, 2.0f, 6.0f}, 2.5f, 1.0f, {1.0f, 0.0f, 1.0f}},
-                 {{6.0f, 2.0f, -6.0f}, 2.5f, 1.0f, {0.0f, 1.0f, 0.0f}},
-                 {{-6.0f, 2.0f, -6.0f}, 2.5f, 1.0f, {0.0f, 0.7f, 1.0f}} };
-
     m_sceneData.lights = m_lights.data();
     m_ltgridData.lights = m_lights.data();
-
-    // Write transform command list
-    m_transformCommandList.begin();
-    m_transformCommandList.bindComputeShader(reinterpret_cast<Render::ComputeShaderPtr>(VertexTransformShader));
-    m_transformCommandList.bindConstantBuffer((uint8_t*)&m_scene.transformData());
-    m_transformCommandList.dispatch();
-    m_transformCommandList.finish();
 }
 
 void App::resize(uint32_t width, uint32_t height)
@@ -208,7 +296,7 @@ void App::drawShadow()
                              Render::Pipeline::DepthUnpack | Render::Pipeline::AlphaTest);
     m_mainCommandList.clearDepth();
 
-    m_mainCommandList.setAlpha(0.25f);
+    m_mainCommandList.setAlpha(0.1f);
 
     m_mainCommandList.bindConstantBuffer((uint8_t*)&m_sceneData);
     m_mainCommandList.bindShader(m_shadowShader);

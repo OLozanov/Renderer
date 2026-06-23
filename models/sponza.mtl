@@ -62,10 +62,10 @@ map_Ka textures/sponza_arch_diff.tga
 map_Disp textures/sponza_arch_ddn.tga
 
 newmtl bricks
-Ns 7.843137
+Ns 250.0
 Ka 0.000000 0.000000 0.000000
 Kd 0.470400 0.470400 0.470400
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 0.000000
 illum 2
@@ -86,10 +86,10 @@ map_Ka textures/sponza_ceiling_a_diff.tga
 map_Disp textures/sponza_ceiling_a_ddn.tga
 
 newmtl chain
-Ns 7.843137
+Ns 250.0
 Ka 0.000000 0.000000 0.000000
 Kd 0.470400 0.470400 0.470400
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
@@ -111,10 +111,10 @@ map_Disp textures/sponza_column_a_ddn.tga
 map_Ka textures/sponza_column_a_diff.tga
 
 newmtl column_b
-Ns 7.843137
+Ns 30.0
 Ka 0.000000 0.000000 0.000000
 Kd 0.470400 0.470400 0.470400
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 0.000000
 illum 2
@@ -235,10 +235,10 @@ map_Ka textures/sponza_flagpole_diff.tga
 map_Disp textures/sponza_flagpole_ddn.tga
 
 newmtl floor
-Ns 7.843137
+Ns 30.0
 Ka 0.000000 0.000000 0.000000
 Kd 0.470400 0.470400 0.470400
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 0.000000
 illum 2

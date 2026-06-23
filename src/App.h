@@ -32,7 +32,7 @@ enum class RenderMode
 class App
 {
 public:
-    App(SDL_Texture* frameBuffer);
+    App(SDL_Texture* frameBuffer, const std::string& sceneName);
 
     void resize(uint32_t width, uint32_t height);
 
@@ -41,6 +41,7 @@ public:
     void display();
 
 private:
+    void loadScene(const std::string& scene, glm::vec3& lightdir, float& scale);
     void setupEffects();
     void setupLight(const glm::vec3& lightDir);
     void drawShadow();

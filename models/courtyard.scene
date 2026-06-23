@@ -1,0 +1,41 @@
+dirlight 0.3 1.0 0.3
+
+light
+pos 6.0 2.0 6.0
+radius 2.5 
+falloff 1.0 
+color 1.0 0.8 0.5
+
+light
+pos -6.0 2.0 6.0
+radius 2.5 
+falloff 1.0 
+color 1.0 0.0 1.0
+
+light
+pos 6.0 2.0 -6.0 
+radius 2.5
+falloff 1.0
+color 0.0 1.0 0.0
+
+light
+pos -6.0 2.0 -6.0 
+radius 2.5
+falloff 1.0 
+color 0.0 0.7 1.0
+
+flame
+pos 6.0 2.0 6.0 
+color 1.0 1.0 1.0
+
+flame
+pos -6.0 2.0 6.0
+color 1.0 0.0 1.0
+
+flame
+pos 6.0 2.0 -6.0
+color 0.0 1.0 0.0
+
+flame
+pos -6.0 2.0 -6.0 
+color 0.0 0.3 1.0
